@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Mestre - Gerenciador</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .panel-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #1a1a1a;
+            border-right: 2px solid #333;
+            padding: 30px 20px;
+        }
+
+        .sidebar h2 {
+            color: #e67e22;
+            margin-bottom: 40px;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            padding: 14px 16px;
+            color: #aaaaaa;
+            text-decoration: none;
+            display: block;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border-left: 4px solid #e67e22;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #e67e22;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+
+        .grid-container {
+            display: flex;
+            gap: 30px;
+            height: 75%;
+        }
+
+        .space-box {
+            flex: 1;
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .box-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .inventory-display {
+            flex: 1;
+            background-color: #161616;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-y: auto;
+            color: #ddd;
+        }
+
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            height: 100%;
+            text-align: center;
+            font-size: 16px;
+            border: 2px dashed #333;
+            border-radius: 6px;
+        }
+
+        .item-card {
+            background-color: #2a2a2a;
+            border-left: 4px solid #e67e22;
+            padding: 10px 16px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-card-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-card img {
+            width: 42px;
+            height: 42px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid #444;
+            background-color: #111;
+        }
+
+        .item-card span {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .btn-remove {
+            background-color: #c0392b;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-remove:hover {
+            background-color: #a93226;
+        }
+
+        .selection-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            justify-content: flex-start;
+        }
+
+        .selection-form label {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .selection-form select {
+            padding: 14px;
+            background-color: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .btn-action {
+            background-color: #e67e22;
+            color: #fff;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: auto;
+        }
+
+        .btn-action:hover {
+            background-color: #d35400;
+        }
+    </style>
+</head>
+<body>
+
+    <script src="lista.js"></script>
+
+    <div class="panel-container">
+        <div class="sidebar">
+            <h2>Painel</h2>
+            <a class="menu-item active">Gerenciador de Itens</a>
+            <a class="menu-item">Estatísticas</a>
+            <a class="menu-item">Configurações</a>
+        </div>
+        
+        <div class="main-content">
+            <div class="section-title">Controle de Inventário do Jogador</div>
+            
+            <div class="grid-container">
+                <div class="space-box">
+                    <div class="box-header">Espaço 1: Inventário do Jogador</div>
+                    <div id="inventario-display" class="inventory-display">
+                        <div class="empty-state">
+                            Nenhum item adicionado ao inventário.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-box">
+                    <div class="box-header">Espaço 2: Seleção de Itens</div>
+                    
+                    <div class="selection-form">
+                        <label for="select-item">Selecione um item da lista:</label>
+                        <select id="select-item">
+                            <option value="">Carregando itens...</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-action" onclick="adicionarAoInventario()">
+                        Adicionar ao Inventário
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function inicializarPainel() {
+            carregarMenuSelecao();
+        }
+
+        function carregarMenuSelecao() {
+            const select = document.getElementById('select-item');
+            select.innerHTML = '<option value="">Selecione um item</option>';
+
+            if (typeof bancoDeItens !== 'undefined' && bancoDeItens.length > 0) {
+                bancoDeItens.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.nome;
+                    select.appendChild(option);
+                });
+            } else {
+                select.innerHTML = '<option value="">Erro ao ler a lista.js</option>';
+            }
+        }
+
+        function adicionarAoInventario() {
+            const select = document.getElementById('select-item');
+            const selectedId = select.value;
+
+            if (!selectedId) {
+                alert("Por favor, selecione um item antes de adicionar.");
+                return;
+            }
+
+            const itemSelecionado = bancoDeItens.find(i => i.id === selectedId);
+
+            if (itemSelecionado) {
+                const display = document.getElementById('inventario-display');
+
+                const emptyState = display.querySelector('.empty-state');
+                if (emptyState) {
+                    display.removeChild(emptyState);
+                }
+
+                const itemJaExiste = display.querySelector(`[data-id='${itemSelecionado.id}']`);
+                if (itemJaExiste) {
+                    alert("Este item já está no inventário!");
+                    return;
+                }
+
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                itemCard.setAttribute('data-id', itemSelecionado.id);
+                
+                itemCard.innerHTML = `
+                    <div class="item-card-info">
+                        <img src="${itemSelecionado.imagem}" alt="${itemSelecionado.nome}">
+                        <span>${itemSelecionado.nome}</span>
+                    </div>
+                    <button class="btn-remove" onclick="removerDoInventario(this)">Remover</button>
+                `;
+                
+                display.appendChild(itemCard);
+            }
+        }
+
+        function removerDoInventario(botao) {
+            const card = botao.parentElement.parentElement;
+            const display = card.parentElement;
+            display.removeChild(card);
+
+            if (display.children.length === 0) {
+                display.innerHTML = `
+                    <div class="empty-state">
+                        Nenhum item adicionado ao inventário.
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', inicializarPainel);
+    </script>
+</body>
+</html>
